@@ -71,7 +71,7 @@ def HA_set_state_on(core: VACore, phrase: str=None):
                 break
         if not matched_event:
             core.play_voice_assistant_speech("Не шмогла")
-            print('Не могу найти нужную автоматизацию')
+            print('Не могу найти нужный объект')
 
     except:
         import traceback
@@ -110,7 +110,7 @@ def HA_set_state_off(core: VACore, phrase: str=None):
                 break
         if not matched_event:
             core.play_voice_assistant_speech("Не шмогла")
-            print('Не могу найти нужную автоматизацию')
+            print('Не могу найти нужный объект')
 
     except:
         import traceback
