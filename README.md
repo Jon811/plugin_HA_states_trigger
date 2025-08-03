@@ -1,7 +1,7 @@
 # plugin_HA_states_trigger
 
 Плагин для переключения состояния объектов Home Assistant в голосовом ассистенте Ирина:
-  https://github.com/janvarev/Irene-Voice-Assistant
+  https://github.com/janvarev/Irene-Voice-Assistant  
 **Требование:** должен быть включён REST API в Home Assistant.
 
 ## Описание
