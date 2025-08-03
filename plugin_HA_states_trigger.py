@@ -140,7 +140,7 @@ def HA_say_temperature(core: VACore, phrase: str):
             if phrase == com:
                 response = requests.get(options["hassio_url"] + 'api/states/' + entity, headers=headers).json()
                 print(response)
-                temperature = int(response['state'])
+                temperature = round(float(response['state']), 0)
                 reply = f"Температура {com} {temperature} градусов"
                 core.play_voice_assistant_speech(reply)
     except:
