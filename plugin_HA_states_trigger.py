@@ -24,13 +24,19 @@ def start(core: VACore):
             "temperature": {
                 "в зале": "sensor.living_room",
                 "на балконе": "sensor.balcony"
+            },
+            "covers": {
+                "шторы на балконе": "cover.balkony",
+                "шторы": "cover.shtora_spalnia"
             }
         },
 
         "commands": {
             "включи": HA_set_state_on,
             "выключи": HA_set_state_off,
-            "какая температура": HA_say_temperature
+            "какая температура": HA_say_temperature,
+            "закрой": HA_set_state_close,
+            "открой": HA_set_state_open
         }
     }
 
@@ -149,4 +155,68 @@ def HA_say_temperature(core: VACore, phrase: str):
         reply = "Не получилось"
         core.play_voice_assistant_speech(reply)
         print(reply)
+    return
+
+def HA_set_state_close(core: VACore, phrase: str=None):
+    if phrase == None:
+        phrase = core.get_last_phrase()
+    if phrase == "":
+        core.play_voice_assistant_speech("Не могу понять, что нужно сделать")
+        return
+    options = core.plugin_options(modname)
+    plugin_commands = core.plugin_manifest(modname)['commands']
+    if options["hassio_url"] == "" or options["hassio_key"] == "":
+        core.play_voice_assistant_speech("Нужен ключ или ссылка для Хоум Ассистента")
+        return
+
+    try:
+        headers = {
+            "Authorization": f"Bearer " + options["hassio_key"],
+            "content-type": "application/json",
+        }
+        matched_event = False
+        for com, entity in options["covers"].items():
+            if phrase == com:
+                data = {"entity_id": entity}
+                domain= entity.split('.')[0]
+                response = requests.post(options["hassio_url"] + 'api/services/' + domain + '/close_cover', headers=headers, json=data)
+                print(response.text)
+                reply = "закрываю"
+    except:
+        import traceback
+        traceback.print_exc()
+        reply = "Не получилось"
+        core.play_voice_assistant_speech(reply)
+        print(reply)
+    return
+
+def HA_set_state_open(core: VACore, phrase: str=None):
+    if phrase == None:
+        phrase = core.get_last_phrase()
+    if phrase == "":
+        core.play_voice_assistant_speech("Не могу понять, что нужно сделать")
+        return
+    options = core.plugin_options(modname)
+    plugin_commands = core.plugin_manifest(modname)['commands']
+    if options["hassio_url"] == "" or options["hassio_key"] == "":
+        core.play_voice_assistant_speech("Нужен ключ или ссылка для Хоум Ассистента")
+        return
+
+    try:
+        headers = {
+            "Authorization": f"Bearer " + options["hassio_key"],
+            "content-type": "application/json",
+        }
+        matched_event = False
+        for com, entity in options["covers"].items():
+            if phrase == com:
+                data = {"entity_id": entity}
+                domain= entity.split('.')[0]
+                response = requests.post(options["hassio_url"] + 'api/services/' + domain + '/open_cover', headers=headers, json=data)
+                print(response.text)
+                reply = "открываю"
+    except:
+        import traceback
+        traceback.print_exc()
+        reply = "Не получилось"
     return
