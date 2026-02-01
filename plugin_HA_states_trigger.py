@@ -182,6 +182,9 @@ def HA_set_state_close(core: VACore, phrase: str=None):
                 response = requests.post(options["hassio_url"] + 'api/services/' + domain + '/close_cover', headers=headers, json=data)
                 print(response.text)
                 reply = "закрываю"
+                core.play_voice_assistant_speech(reply)
+                matched_event = True
+                break
     except:
         import traceback
         traceback.print_exc()
@@ -215,6 +218,9 @@ def HA_set_state_open(core: VACore, phrase: str=None):
                 response = requests.post(options["hassio_url"] + 'api/services/' + domain + '/open_cover', headers=headers, json=data)
                 print(response.text)
                 reply = "открываю"
+                core.play_voice_assistant_speech(reply)
+                matched_event = True
+                break
     except:
         import traceback
         traceback.print_exc()
